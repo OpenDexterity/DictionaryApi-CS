@@ -107,7 +107,7 @@ namespace OpenDexterity.DictionaryApi {
             //reading file
             using (BinaryReader reader = new(File.OpenRead(this.FilePath))) {
                 #region Dictionary Header
-                
+
                 //00,01,02,03: signature
                 this.Signature = reader.ReadBytes(Consts.ValidSignatureLength);
 
@@ -173,7 +173,7 @@ namespace OpenDexterity.DictionaryApi {
                 //module table has a header
                 //00,01: used module count
                 this.UsedModules = reader.ReadUInt16();
-                
+
                 //02,03: unused module count
                 this.UnusedModules = reader.ReadUInt16();
 

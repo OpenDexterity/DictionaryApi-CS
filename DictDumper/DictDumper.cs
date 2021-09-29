@@ -1,7 +1,7 @@
-﻿using System;
-using System.IO;
+﻿using OpenDexterity.DictionaryApi;
+using System;
 using System.Diagnostics;
-using OpenDexterity.DictionaryApi;
+using System.IO;
 using System.Linq;
 
 namespace DictLibraryTester {
@@ -61,9 +61,9 @@ namespace DictLibraryTester {
                 $"{dict.UnusedModules} unused module(s), and {dict.TotalModules} total.");
 
             //don't listen to visual studio, these casts are not redundant
-            #pragma warning disable IDE0004
+#pragma warning disable IDE0004
             double type1Percent = (double)dict.Modules.Where(x => x.Type == 1).Count() / (double)dict.TotalModules;
-            #pragma warning restore IDE0004
+#pragma warning restore IDE0004
             Console.WriteLine($"{type1Percent:P} of the modules are type 1.");
             Console.WriteLine();
 

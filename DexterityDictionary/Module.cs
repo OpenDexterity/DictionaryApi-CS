@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace OpenDexterity.DictionaryApi {
     public class Module {
@@ -11,17 +7,17 @@ namespace OpenDexterity.DictionaryApi {
         /// Module's type
         /// </summary>
         public ushort Type { get; }
-        
+
         /// <summary>
         /// Module's ID
         /// </summary>
         public uint Id { get; }
-        
+
         /// <summary>
         /// Block number of module's directory block
         /// </summary>
         public uint DirBlock { get; }
-        
+
         /// <summary>
         /// Module's name offset
         /// </summary>

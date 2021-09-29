@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OpenDexterity.DictionaryApi {
     public class Block {
         #region Block Components
-        
+
         /// <summary>
         /// Block number
         /// </summary>
@@ -53,7 +49,7 @@ namespace OpenDexterity.DictionaryApi {
             //returning binaryreader
             return new(strm);
         }
-        
+
         #endregion
 
         /// <summary>
