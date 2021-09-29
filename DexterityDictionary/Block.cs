@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DexterityDictionary {
+namespace OpenDexterity.DictionaryApi {
     public class Block {
         #region Block Components
         

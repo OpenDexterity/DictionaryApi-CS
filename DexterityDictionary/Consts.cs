@@ -1,4 +1,4 @@
-﻿namespace DexterityDictionary {
+﻿namespace OpenDexterity.DictionaryApi {
     public class Consts {
         public static byte[] ValidSignature { get; } = { 0x25, 0x56, 0x54, 0x4c };
         public static int ValidSignatureLength { get; } = ValidSignature.Length;

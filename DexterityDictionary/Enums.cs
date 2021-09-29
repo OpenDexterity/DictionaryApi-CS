@@ -1,4 +1,4 @@
-﻿namespace DexterityDictionary {
+﻿namespace OpenDexterity.DictionaryApi {
     public class Enums {
         public enum ResourceTypes {
             TableNormal = 1,

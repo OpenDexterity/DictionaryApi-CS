@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace DexterityDictionary {
+namespace OpenDexterity.DictionaryApi {
     public class Dictionary {
         #region Dictionary Components
 

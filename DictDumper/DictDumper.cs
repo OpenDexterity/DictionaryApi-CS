@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Diagnostics;
-using DexterityDictionary;
+using OpenDexterity.DictionaryApi;
 using System.Linq;
 
 namespace DictLibraryTester {
