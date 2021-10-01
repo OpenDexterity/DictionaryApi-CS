@@ -69,11 +69,31 @@ namespace OpenDexterity.DictionaryApi {
             this.Unused = unused;
             this.Parent = parentDict;
 
-            //validity checking
+            #region Validity Checking
+            
+            //type
             if (!Enum.IsDefined(typeof(Enums.BlockType), type))
                 throw new Exception($"Encountered unknown block type {type} when parsing block {this.Number}");
             else
                 this.Type = (Enums.BlockType)type;
+
+            //start offset
+            if (this.Start > parentDict.FileInfo.Length)
+                throw new Exception($"Block #{this.Number}: Block start offset is greater than the length of the file.");
+
+            //size+offset
+            if ((this.Size + this.Start) > parentDict.FileInfo.Length)
+                throw new Exception($"Block #{this.Number}: End of block is past the end of the file.");
+
+            //unused space & block size
+            if (this.Unused > this.Size)
+                throw new Exception($"Block #{this.Number}: Unused space is greater than the size of the block.");
+
+            //unused space & file size
+            if (this.Unused > this.Parent.FileInfo.Length)
+                throw new Exception($"Block #{this.Number}: Unused space is greater than the size of the file.");
+
+            #endregion
         }
     }
 }
