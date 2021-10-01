@@ -80,6 +80,11 @@ namespace OpenDexterity.DictionaryApi {
 
         public string FilePath { get; }
 
+        /// <summary>
+        /// FileInfo instance for this dictionary file
+        /// </summary>
+        public FileInfo FileInfo { get; }
+
         #endregion
 
         /// <summary>
@@ -89,6 +94,9 @@ namespace OpenDexterity.DictionaryApi {
         public Dictionary(string dictPath) {
             //make sure we have permission to read this file
             this.FilePath = Path.GetFullPath(dictPath);
+            this.FileInfo = new(this.FilePath);
+
+            #region Dictionary File Validation
 
             //does file exist?
             if (!File.Exists(this.FilePath))
@@ -104,6 +112,12 @@ namespace OpenDexterity.DictionaryApi {
                     throw new Exception("Specified file does not have .dic or .cnk extension.");
             }
 
+            //making sure file is large enough to have a header
+            if (this.FileInfo.Length < Consts.DictHeaderSize)
+                throw new Exception("Specified file is not large enough to contain a valid header.");
+
+            #endregion
+
             //reading file
             using (BinaryReader reader = new(File.OpenRead(this.FilePath))) {
                 #region Dictionary Header
@@ -113,7 +127,7 @@ namespace OpenDexterity.DictionaryApi {
 
                 //validating signature too
                 if (!Consts.ValidSignature.SequenceEqual(this.Signature))
-                    throw new Exception("Dictionary's header is not valid.");
+                    throw new Exception("Dictionary's file signature is not valid.");
 
                 //04,05,06,07 are unknown. skipping for now.
                 reader.BaseStream.Seek(0x8, SeekOrigin.Begin);
@@ -127,11 +141,27 @@ namespace OpenDexterity.DictionaryApi {
                 //0E,0F,10,11: block table offset
                 this.BlockTableOffset = reader.ReadUInt32();
 
+                //validating block table offset
+                if (this.BlockTableOffset > this.FileInfo.Length)
+                    throw new Exception("Dictionary's block table offset is greater than the size of the file. " +
+                        $"Offset is 0x{this.BlockTableOffset:X8} and file size is 0x{this.FileInfo.Length:X8} bytes.");
+
                 //12,13,14,15: block table length
                 this.BlockTableLength = reader.ReadUInt32();
 
+                //validating block table length
+                if ((this.BlockTableLength * Consts.BlkTblRecordSize) > (this.FileInfo.Length - Consts.DictHeaderSize))
+                    throw new Exception("Dictionary's block table length is greater than the size of the file. " +
+                        $"Got {this.BlockTableLength} records at 0x{Consts.BlkTblRecordSize:X2} bytes each, " +
+                        $"totalling 0x{(this.BlockTableLength * Consts.BlkTblRecordSize):X4} bytes.");
+
                 //16,17,18,19: unallocated block count
                 this.UnallocatedBlocks = reader.ReadUInt32();
+
+                //validating unallocated block count
+                if (this.UnallocatedBlocks > this.BlockTableLength)
+                    throw new Exception("Dictionary's unallocated block count is greater than the size of the block table. " +
+                        $"Got {this.UnallocatedBlocks} unallocated blocks, and {this.BlockTableLength} total blocks.");
 
                 #endregion
 
