@@ -204,8 +204,16 @@ namespace OpenDexterity.DictionaryApi {
                 //00,01: used module count
                 this.UsedModules = reader.ReadUInt16();
 
+                //validating used module count
+                if ((this.UsedModules * Consts.ModTblRecordSize) > this.FileInfo.Length)
+                    throw new Exception($"Error when parsing module table: Used modules exceed file size.");
+
                 //02,03: unused module count
                 this.UnusedModules = reader.ReadUInt16();
+
+                //validating used module count
+                if ((this.UnusedModules * Consts.ModTblRecordSize) > this.FileInfo.Length)
+                    throw new Exception($"Error when parsing module table: Unused modules exceed file size.");
 
                 //04,05,06,07: unknown field. skipping
                 reader.BaseStream.Seek(4, SeekOrigin.Current);
