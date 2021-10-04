@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text;
 
 namespace OpenDexterity.DictionaryApi {
@@ -58,8 +59,26 @@ namespace OpenDexterity.DictionaryApi {
             this.NameLength = nameLength;
             this.Parent = parentDict;
 
-            //validity checking
-            //TODO
+            #region Validity Checking
+
+            //module type always seems to be 1 for whatever reason
+            if (this.Type != 1)
+                throw new Exception($"Module ID {this.Id}: Got type {this.Type}, expected type 1.");
+
+            //dir block number
+            if (this.DirBlock > this.Parent.BlockTableLength)
+                throw new Exception($"Module ID {this.Id}: Directory block's number is not valid. Got {this.DirBlock}. " +
+                    $"Dictionary has {this.Parent.BlockTableLength} blocks.");
+
+            //name offset
+            if (this.NameOffset > this.Parent.GetBlock(2).Size)
+                throw new Exception($"Module ID {this.Id}: Name offset is past the bounds of block 2. " +
+                    $"Got offset {this.NameOffset}, block 2 is {this.Parent.GetBlock(2).Size} bytes long.");
+            if (this.NameLength > this.Parent.GetBlock(2).Size)
+                throw new Exception($"Module ID {this.Id}: Name length is past the bounds of block 2. " +
+                    $"Got offset {this.NameLength}, block 2 is {this.Parent.GetBlock(2).Size} bytes long.");
+
+            #endregion
         }
 
         /// <summary>
